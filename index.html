@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anime Collection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- CÀI ĐẶT CHUNG --- */
+        :root {
+            --primary-color: #22c55e; /* Green */
+            --secondary-color: #3b82f6; /* Blue */
+            --dark-bg: #0c1427;
+            --card-bg: rgba(17, 24, 39, 0.5);
+            --text-light: #e5e7eb;
+            --text-dark: #9ca3af;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--dark-bg);
+            color: var(--text-light);
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* --- ẢNH NỀN --- */
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* 
+              THAY THẾ URL DƯỚI ĐÂY BẰNG ẢNH NỀN CỦA BẠN 
+              Ví dụ: url('path/to/your/background.jpg')
+            */
+            background-image: url('https://images.alphacoders.com/133/1331032.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.15;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* --- HEADER --- */
+        .header {
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .logo span {
+            font-weight: 700;
+            font-size: 1.25rem;
+        }
+
+        .profile-button {
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .profile-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(34, 197, 94, 0.4);
+        }
+
+        /* --- HERO SECTION --- */
+        .hero {
+            text-align: center;
+            padding: 4rem 0;
+        }
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            position: relative;
+            display: inline-block;
+        }
+        .hero h1 .sparkle {
+            position: absolute;
+            top: -0.5rem;
+            right: -2rem;
+            color: #facc15;
+            font-size: 1.5rem;
+        }
+        .hero p {
+            font-size: 1.125rem;
+            color: var(--text-dark);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- BỘ LỌC VÀ TÌM KIẾM --- */
+        .filter-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 1rem;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--text-light);
+            font-size: 1rem;
+            padding-left: 3rem;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%239ca3af' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'%3E%3C/circle%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'%3E%3C/line%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: 1rem center;
+        }
+
+        .genre-filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .genre-button {
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: var(--card-bg);
+            color: var(--text-light);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .genre-button:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .genre-button.active {
+            background: var(--primary-color);
+            border-color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        /* --- DANH SÁCH ANIME --- */
+        .results-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            color: var(--text-dark);
+            font-size: 0.875rem;
+        }
+        .results-info p {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+        }
+
+        .anime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .anime-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .anime-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-image {
+            position: relative;
+        }
+        .card-image img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            display: block;
+        }
+        .status-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .status-badge.ona {
+            background-color: #f59e0b;
+        }
+
+        .card-content {
+            padding: 1rem;
+        }
+        .card-content h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .card-content .description {
+            font-size: 0.875rem;
+            color: var(--text-dark);
+            height: 4.2em; /* 3 lines */
+            line-height: 1.4em;
+            overflow: hidden;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+        }
+        .rating {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #facc15;
+            font-weight: 700;
+        }
+
+        /* --- FOOTER --- */
+        .footer {
+            margin-top: 4rem;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(10px);
+            padding: 3rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            padding-bottom: 2rem;
+        }
+        .footer-column h4 {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+        }
+        .footer-column p, .footer-column li {
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        .footer-column ul {
+            list-style: none;
+        }
+        .footer-column a:hover {
+            color: var(--primary-color);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.875rem;
+            color: var(--text-dark);
+        }
+        .footer-bottom-links a {
+            margin-left: 1.5rem;
+        }
+        .footer-bottom-links a:hover {
+            color: var(--text-light);
+        }
+
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                <!-- THAY THẾ AVATAR Ở ĐÂY -->
+                <img src="avatar.PNG" alt="Avatar">
+                <span>Tran Huu Dat</span>
+            </div>
+            <a href="#" class="profile-button">My Profile</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <section class="hero">
+            <h1>Anime <span style="position: relative;">Collection<span class="sparkle">✨</span></span></h1>
+            <p>Discover amazing anime series and movies that I've watched and wanna share with you!</p>
+        </section>
+
+        <section class="filter-section">
+            <div class="search-bar">
+                <input type="text" placeholder="Search anime...">
+            </div>
+            <div class="genre-filters">
+                <button class="genre-button active">All</button>
+                <button class="genre-button">Action</button>
+                <button class="genre-button">Adventure</button>
+                <button class="genre-button">Drama</button>
+                <button class="genre-button">Fantasy</button>
+                <button class="genre-button">Supernatural</button>
+                <button class="genre-button">Mystery</button>
+                <button class="genre-button">Psychological</button>
+                <button class="genre-button">Romance</button>
+                <button class="genre-button">Thriller</button>
+                <button class="genre-button">Slice of Life</button>
+                <button class="genre-button">Sports</button>
+                <button class="genre-button">Comedy</button>
+                <button class="genre-button">Ecchi</button>
+                <button class="genre-button">Music</button>
+                <button class="genre-button">Sci-Fi</button>
+            </div>
+        </section>
+
+        <div class="results-info">
+            <p>Showing 1-4 of 8 anime</p>
+            <p>Page 1 of 1</p>
+        </div>
+
+        <div class="anime-grid">
+            <!-- ANIME CARD 1 -->
+            <div class="anime-card">
+                <div class="card-image">
+                    <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx101922-WBsBl0ClmgYL.jpg" alt="Demon Slayer">
+                    <span class="status-badge">Session 1</span>
+                </div>
+                <div class="card-content">
+                    <h3>Demon Slayer</h3>
+                    <p class="description">It is the Taisho Period in Japan. Tanjiro, a kindhearted boy who sells charcoal for a living, finds his family slaughtered by a demon.</p>
+                    <div class="card-footer">
+                        <span class="rating">
+                            ⭐ 10
+                        </span>
+                        <span>2013</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANIME CARD 2 -->
+            <div class="anime-card">
+                <div class="card-image">
+                    <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx16498-buvcRTBx4NSm.jpg" alt="Attack On Titan">
+                    <span class="status-badge">Session 1</span>
+                </div>
+                <div class="card-content">
+                    <h3>Attack On Titan</h3>
+                    <p class="description">Several hundred years ago, humans were nearly exterminated by titans. Titans are typically several stories tall, seem to have no intelligence, devour human beings...</p>
+                    <div class="card-footer">
+                         <span class="rating">
+                            ⭐ 10
+                        </span>
+                        <span>2013</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANIME CARD 3 -->
+            <div class="anime-card">
+                <div class="card-image">
+                    <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx21355-wRVUrGxpvIQQ.jpg" alt="Re:Zero">
+                    <span class="status-badge">Session 1</span>
+                </div>
+                <div class="card-content">
+                    <h3>Re:Zero - Starting Life in Another...</h3>
+                    <p class="description">In the story, Subaru Natsuki is an ordinary high school student who is lost in an alternate world, where he is rescued by a beautiful, silver-haired girl.</p>
+                    <div class="card-footer">
+                         <span class="rating">
+                            ⭐ 10
+                        </span>
+                        <span>2016</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANIME CARD 4 -->
+            <div class="anime-card">
+                <div class="card-image">
+                    <img src="https://s4.anilist.co/file/anilistcdn/media/anime/cover/large/bx170942-KKcLfQzV57nG.jpg" alt="Blue Box">
+                    <span class="status-badge ona">ONA</span>
+                </div>
+                <div class="card-content">
+                    <h3>Blue Box</h3>
+                    <p class="description">Taiki Inomata loves badminton, but he has a long way to go before he can reach nationals. When Taiki sees upperclassman Chinatsu Kano...</p>
+                    <div class="card-footer">
+                         <span class="rating">
+                            ⭐ 10
+                        </span>
+                        <span>2024</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <div class="logo">
+                        <!-- THAY THẾ AVATAR Ở ĐÂY -->
+                        <img src="https://i.pinimg.com/736x/d8/02/9c/d8029c95350c1f2043e0691764355554.jpg" alt="Avatar">
+                        <span>Kanna Kamui</span>
+                    </div>
+                    <p style="margin-top: 1rem;">My watched anime list. All movie data sourced from AniList.</p>
+                </div>
+                <div class="footer-column">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="#">My portfolio</a></li>
+                        <li><a href="#">Facebook</a></li>
+                        <li><a href="#">Discord</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h4>External</h4>
+                    <ul>
+                        <li><a href="#">My AniList Profile</a></li>
+                        <li><a href="#">AnimeVietsub</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>© 2025 Tran Huu Dat - All rights reserved.</span>
+                <div class="footer-bottom-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Contact</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
